@@ -2,7 +2,7 @@
 const SUPABASE_URL = "https://ktjwaewacbqhythbskzd.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0andhZXdhY2JxaHl0aGJza3pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0OTI2NjQsImV4cCI6MjA5MzA2ODY2NH0.9UEt_fnOTvaO82CnckpM88Bs1gHAWhNODfDARUPcymc";
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const form = document.getElementById('regForm');
 const messageDiv = document.getElementById('message');
@@ -22,7 +22,7 @@ form.addEventListener('submit', async (e) => {
 
     try {
         // 1. Sprawdź czy Minecraft Username już istnieje
-        const { data: existingUser, error: checkError } = await supabase
+        const { data: existingUser, error: checkError } = await supabaseClient
             .from('users')
             .select('username')
             .eq('username', username)
@@ -36,7 +36,7 @@ form.addEventListener('submit', async (e) => {
         }
 
         // 2. Sprawdź czy Display Name już istnieje
-        const { data: existingDisplay, error: displayError } = await supabase
+        const { data: existingDisplay, error: displayError } = await supabaseClient
             .from('users')
             .select('display_name')
             .eq('display_name', displayName)
@@ -50,7 +50,7 @@ form.addEventListener('submit', async (e) => {
         }
 
         // 3. Wstaw nowego użytkownika
-        const { error: insertError } = await supabase
+        const { error: insertError } = await supabaseClient
             .from('users')
             .insert([
                 { 
