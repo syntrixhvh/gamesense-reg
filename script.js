@@ -21,7 +21,7 @@ form.addEventListener('submit', async (e) => {
     messageDiv.style.display = 'none';
 
     try {
-        // 1. Sprawdź czy użytkownik już istnieje
+        // 1. Sprawdź czy Minecraft Username już istnieje
         const { data: existingUser, error: checkError } = await supabase
             .from('users')
             .select('username')
@@ -31,11 +31,25 @@ form.addEventListener('submit', async (e) => {
         if (checkError) throw checkError;
 
         if (existingUser) {
-            showMessage('Ten nick jest już zarejestrowany!', 'error');
+            showMessage('Ten nick Minecraft jest już zarejestrowany!', 'error');
             return;
         }
 
-        // 2. Wstaw nowego użytkownika
+        // 2. Sprawdź czy Display Name już istnieje
+        const { data: existingDisplay, error: displayError } = await supabase
+            .from('users')
+            .select('display_name')
+            .eq('display_name', displayName)
+            .maybeSingle();
+
+        if (displayError) throw displayError;
+
+        if (existingDisplay) {
+            showMessage('Ta nazwa wyświetlana (Admin/User itp.) jest już zajęta!', 'error');
+            return;
+        }
+
+        // 3. Wstaw nowego użytkownika
         const { error: insertError } = await supabase
             .from('users')
             .insert([
